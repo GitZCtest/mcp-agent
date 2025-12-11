@@ -1,0 +1,57 @@
+# MCP Agent 日志配置示例
+# 将此文件复制为 config.yaml 并根据需要修改
+
+# 日志配置
+logging:
+  # 日志级别: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+
+  # 日志文件路径（相对于项目根目录）
+  file: logs/mcp-agent.log
+
+  # 是否输出到控制台（CLI模式建议关闭，避免干扰）
+  console: false
+
+  # 日志文件最大大小（MB）
+  max_size: 10
+
+  # 保留的日志文件数量
+  backup_count: 5
+
+  # 日志格式
+  # 可选: default, detailed, simple
+  # default: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  # detailed: "%(asctime)s - %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s"
+  # simple: "%(levelname)s - %(message)s"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+# 高级配置
+advanced:
+  # 是否启用调试模式（会输出更多日志）
+  debug: false
+
+  # 会话保存目录
+  session_dir: sessions
+
+  # 缓存目录
+  cache_dir: .cache
+
+  # 是否启用性能分析
+  profiling: false
+
+# 功能开关
+features:
+  # 是否启用历史记录
+  enable_history: true
+
+  # 是否自动保存会话
+  auto_save: true
+
+  # 自动保存间隔（秒）
+  save_interval: 300
+
+  # 是否启用流式输出
+  streaming: true
+
+  # 是否启用工具调用
+  enable_tools: true

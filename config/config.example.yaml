@@ -1,0 +1,173 @@
+# ============================================================
+# MCP Agent 配置文件
+# ============================================================
+# 复制此文件为 config.yaml 并根据需要修改
+# 支持环境变量覆盖，敏感信息建议使用 .env 文件
+
+# ------------------------------------------------------------
+# 智能体配置
+# ------------------------------------------------------------
+agent:
+  # 提供商: anthropic 或 openai
+  provider: "openai"
+
+  # 模型名称
+  # Anthropic: claude-3-5-sonnet-20241022, claude-3-opus-20240229
+  # OpenAI: gpt-4, gpt-4-turbo, gpt-3.5-turbo
+  # OpenAI兼容: 任何兼容 OpenAI API 的模型
+  model: "gpt-4"
+
+  # 最大输出 token 数
+  max_tokens: 8192
+
+  # 温度参数 (0.0-2.0)，越高越有创造性
+  temperature: 0.7
+
+  # 最大工具调用轮数，防止无限循环
+  max_iterations: 10
+
+  # 系统提示词（留空使用默认）
+  system_prompt: ""
+
+  # 对话历史保留条数
+  max_history: 50
+
+# ------------------------------------------------------------
+# MCP 服务器配置
+# ------------------------------------------------------------
+# 可同时配置多个服务器，程序会并行连接
+# 工具名称会自动添加服务器前缀避免冲突，如: filesystem_read_file
+
+mcp_servers:
+  # 文件系统服务器 - 读写本地文件
+  - name: filesystem
+    command: npx
+    args:
+      - "-y"
+      - "@modelcontextprotocol/server-filesystem"
+      - "./workspace"          # 允许访问的目录，按需修改
+    description: "本地文件系统访问"
+    enabled: true
+
+  # 更多服务器示例（取消注释启用）:
+
+  # # 访问另一个目录
+  # - name: documents
+  #   command: npx
+  #   args:
+  #     - "-y"
+  #     - "@modelcontextprotocol/server-filesystem"
+  #     - "C:/Users/YourName/Documents"
+  #   description: "文档目录访问"
+  #   enabled: true
+
+  # # PostgreSQL 数据库
+  # - name: postgres
+  #   command: npx
+  #   args:
+  #     - "-y"
+  #     - "@modelcontextprotocol/server-postgres"
+  #     - "postgresql://localhost/mydb"
+  #   env:
+  #     PGPASSWORD: "${PGPASSWORD}"   # 从环境变量读取
+  #   description: "PostgreSQL 数据库"
+  #   enabled: false
+
+  # # Brave 网络搜索
+  # - name: brave-search
+  #   command: npx
+  #   args:
+  #     - "-y"
+  #     - "@anthropic/mcp-server-brave-search"
+  #   env:
+  #     BRAVE_API_KEY: "${BRAVE_API_KEY}"
+  #   description: "Brave 网络搜索"
+  #   enabled: false
+
+  # # 自定义 Python 服务器
+  # - name: custom
+  #   command: python
+  #   args:
+  #     - "path/to/your/server.py"
+  #   env:
+  #     CUSTOM_VAR: "value"
+  #   description: "自定义服务器"
+  #   enabled: false
+
+# MCP 全局设置
+mcp:
+  enabled: true
+  use_tool_prefix: true        # 工具名添加服务器前缀
+  connection_timeout: 30       # 连接超时（秒）
+  request_timeout: 60          # 请求超时（秒）
+
+# ------------------------------------------------------------
+# 工作目录配置
+# ------------------------------------------------------------
+workspace:
+  path: "./workspace"
+  auto_create: true            # 自动创建目录
+
+# ------------------------------------------------------------
+# API 配置
+# ------------------------------------------------------------
+# 敏感信息建议使用环境变量:
+#   ANTHROPIC_API_KEY, OPENAI_API_KEY, OPENAI_BASE_URL
+
+api:
+  anthropic:
+    api_key: ""                # 或设置环境变量 ANTHROPIC_API_KEY
+    base_url: "https://api.anthropic.com"
+
+  openai:
+    api_key: ""                # 或设置环境变量 OPENAI_API_KEY
+    base_url: "https://api.openai.com/v1"  # 可改为代理地址
+    organization: ""
+
+  timeout: 60
+  max_retries: 3
+
+# ------------------------------------------------------------
+# 功能开关
+# ------------------------------------------------------------
+features:
+  streaming: false             # 流式输出（开启时不支持工具调用）
+  enable_tools: true           # 启用工具调用
+  enable_history: true         # 启用对话历史
+  auto_save: false             # 自动保存对话
+  save_interval: 300           # 自动保存间隔（秒）
+
+# ------------------------------------------------------------
+# 界面配置
+# ------------------------------------------------------------
+ui:
+  theme: "monokai"
+  show_thinking: true          # 显示思考状态
+  show_tool_calls: true        # 显示工具调用详情
+  markdown_code_theme: "monokai"
+  max_result_preview: 800      # 工具结果预览长度
+
+cli:
+  prompt: "MCP Agent> "
+  color: true
+  show_welcome: true
+  show_token_usage: true
+
+# ------------------------------------------------------------
+# 日志配置
+# ------------------------------------------------------------
+logging:
+  level: "INFO"                # DEBUG, INFO, WARNING, ERROR
+  file: "logs/mcp-agent.log"
+  console: false               # 控制台输出（建议关闭避免干扰UI）
+  max_size: 10                 # 日志文件大小（MB）
+  backup_count: 5              # 保留日志文件数
+
+# ------------------------------------------------------------
+# 高级配置
+# ------------------------------------------------------------
+advanced:
+  cache_dir: ".cache"
+  session_dir: "sessions"
+  debug: false
+  profiling: false

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -m mcp_agent.ui:*)",
+      "Bash(python main.py:*)",
+      "Bash(timeout 5 python:*)",
+      "Bash(exit 0)",
+      "Bash(cat:*)"
+    ]
+  }
+}
